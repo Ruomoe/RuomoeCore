@@ -1,0 +1,4 @@
+name: RuomoeCore
+main: cc.canyi.core.RuomoeCorePlugin
+depend: [ProtocolLib]
+version: 1.0.0
