@@ -5,5 +5,5 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public interface ActiveFunction {
-    public abstract void function(Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem);
+    public abstract boolean function(Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem);
 }

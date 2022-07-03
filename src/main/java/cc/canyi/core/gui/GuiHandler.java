@@ -40,19 +40,23 @@ public class GuiHandler {
     }
 
     public boolean runFunction(GuiEventType type, Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem, int slot) {
+        boolean canceled = this.canceled;
+
         HashSet<RegisteredActiveFunction> all = functions.get(GuiEventType.ALL);
         if(all != null) {
             for(RegisteredActiveFunction registeredActiveFunction : all) {
-                if(registeredActiveFunction.getSlot() == slot)
-                    registeredActiveFunction.getFunction().function(inv, player, cursorItem, currentItem);
+                if(registeredActiveFunction.getSlot() == slot) {
+                    return registeredActiveFunction.getFunction().function(inv, player, cursorItem, currentItem);
+                }
             }
         }
 
         HashSet<RegisteredActiveFunction> registeredActiveFunctions = functions.get(type);
         if(registeredActiveFunctions != null) {
             for(RegisteredActiveFunction registeredActiveFunction : registeredActiveFunctions) {
-                if(registeredActiveFunction.getSlot() == slot)
-                    registeredActiveFunction.getFunction().function(inv, player, cursorItem, currentItem);
+                if(registeredActiveFunction.getSlot() == slot) {
+                    return registeredActiveFunction.getFunction().function(inv, player, cursorItem, currentItem);
+                }
             }
         }
 
@@ -75,7 +79,7 @@ public class GuiHandler {
                 case SHIFT_RIGHT: {
                     return runFunction(GuiEventType.SHIFT_RIGHT_CLICK, inv, player, cursorItem, currentItem, slot);
                 }
-                default: return false;
+                default: return canceled;
             }
         }
         return false;

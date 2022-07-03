@@ -6,5 +6,5 @@ import org.bukkit.inventory.ItemStack;
 
 @FunctionalInterface
 public interface ActiveFunction {
-    public abstract void function(Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem);
+    public abstract boolean function(Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem);
 }
