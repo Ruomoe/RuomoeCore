@@ -20,7 +20,6 @@ public abstract class BukkitPlugin extends JavaPlugin {
     public void onLoad() {
         instance = this;
         root = this.getDataFolder().getAbsolutePath();
-
         this.getLogger().info(getClass().getSimpleName() + " has been loaded!");
     }
 
