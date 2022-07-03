@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashSet;
@@ -30,6 +31,17 @@ public class GuiEventProxy implements Listener {
             for(GuiHandler handler : handlers) {
                 boolean cancel = handler.event(inventory, player, event.getSlot(), event.getClick(), event.getCursor().clone(), event.getCurrentItem().clone());
                 if(cancel) event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void closeInv(InventoryCloseEvent event) {
+        Inventory inventory = event.getInventory();
+
+        for(GuiHandler handler : handlers) {
+            if(handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
+                handler.destroy();
             }
         }
     }

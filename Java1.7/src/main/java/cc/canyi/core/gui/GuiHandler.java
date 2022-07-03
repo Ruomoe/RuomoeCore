@@ -1,9 +1,7 @@
 package cc.canyi.core.gui;
 
 import cc.canyi.core.gui.model.RegisteredActiveFunction;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
