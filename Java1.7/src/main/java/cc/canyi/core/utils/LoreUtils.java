@@ -48,5 +48,18 @@ public class LoreUtils {
         return list;
     }
 
+    public static List<String> replaceListSomeChar(List<String> list, String needReplace, String replaced) {
+        for(int i = 0; i < list.size(); i++) {
+            list.set(i, list.get(i).replace(needReplace, replaced));
+        }
+        return list;
+    }
+
+    public static List<String> replaceListSomeCharRegex(List<String> list, String regex, String replaced) {
+        for(int i = 0; i < list.size(); i++) {
+            list.set(i, list.get(i).replaceAll(regex, replaced));
+        }
+        return list;
+    }
 
 }
