@@ -1,6 +1,8 @@
 package cc.canyi.core;
 
 import cc.canyi.core.command.CommandManager;
+import cc.canyi.core.gui.GuiEventProxy;
+import cc.canyi.core.gui.GuiHandler;
 import cc.canyi.core.plugin.BukkitPlugin;
 import cc.canyi.core.utils.ListenerUtils;
 import lombok.Getter;
@@ -27,6 +29,8 @@ public class RuomoeCorePlugin extends BukkitPlugin {
         debug = this.getConfig().getBoolean("DebugMode");
         CommandManager.clear();
         ListenerUtils.clear();
+
+        ListenerUtils.registerListener(this, new GuiEventProxy());
         this.getLogger().info("RuomoeCore enable.");
     }
 }

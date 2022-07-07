@@ -1,5 +1,6 @@
 package cc.canyi.core.gui;
 
+import cc.canyi.core.RuomoeCorePlugin;
 import cc.canyi.core.gui.model.RegisteredActiveFunction;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,11 +19,17 @@ public class GuiHandler {
     @Setter
     private boolean canceled;
 
+    @Setter
+    private boolean notCheckPlayerInvSlot;
+
+    private final HashSet<Integer> reBackSlots;
+
     private final HashMap<GuiEventType, HashSet<RegisteredActiveFunction>> functions;
 
     public GuiHandler(Inventory inventory) {
         this.handledInv = inventory;
         functions = new HashMap<>();
+        reBackSlots = new HashSet<>();
     }
 
     public void bind() {
@@ -37,11 +44,21 @@ public class GuiHandler {
         HashSet<RegisteredActiveFunction> hashSet = functions.containsKey(type) ? functions.get(type) : new HashSet<RegisteredActiveFunction>();
         hashSet.add(new RegisteredActiveFunction(type, slot, function));
         functions.put(type, hashSet);
+
+        if(RuomoeCorePlugin.isDebug()) {
+            System.out.println("Gui: " + handledInv.getTitle() +  " Now Functions " + function);
+        }
+    }
+
+    public void registerReBackItemSlot(int slot) {
+        reBackSlots.add(slot);
     }
 
     public boolean runFunction(GuiEventType type, Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem, int slot) {
         boolean canceled = this.canceled;
-
+        if(RuomoeCorePlugin.isDebug()) {
+            System.out.println("Gui: " + inv.getTitle() + " TryRun " + type);
+        }
         HashSet<RegisteredActiveFunction> all = functions.get(GuiEventType.ALL);
         if(all != null) {
             for(RegisteredActiveFunction registeredActiveFunction : all) {
