@@ -23,6 +23,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     implementation files('libs/bukkit-1.6.4-R2.0.jar')
+    implementation files('libs/craftbukkit-1.6.4-R2.0.jar')
     implementation files('libs/ProtocolLib_3.4.0.jar')
 }
 

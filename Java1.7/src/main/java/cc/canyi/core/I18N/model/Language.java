@@ -1,5 +1,6 @@
 package cc.canyi.core.I18N.model;
 
+import cc.canyi.core.RuomoeCorePlugin;
 import cc.canyi.core.utils.LoreUtils;
 import lombok.Data;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,7 +20,11 @@ public class Language {
     }
 
     public Language load() {
+        langCacheMap = new HashMap<>();
         for(String key : langYaml.getKeys(false)) {
+            if(RuomoeCorePlugin.isDebug()) {
+                RuomoeCorePlugin.getInfoLogger().info(name + " loaded " + key);
+            }
             langCacheMap.put(key, LoreUtils.replaceColorChar(langYaml.getString(key)));
         }
         return this;

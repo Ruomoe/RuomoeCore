@@ -17,8 +17,8 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.20')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    implementation files('libs/bukkit-latest.jar')
     implementation files('libs/ProtocolLib_3.6.5.jar')
+    implementation files('libs/[修复版]spigot-1.12.2.jar')
 }
 
 test {
