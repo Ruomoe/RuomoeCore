@@ -14,6 +14,8 @@ public class LanguageManager {
         PluginLanguage pluginLanguage = languageCache.containsKey(mainPlugin) ? languageCache.get(mainPlugin) : new PluginLanguage(mainPlugin, new HashMap<String, Language>());
 
         pluginLanguage.getLanguageCache().put(name, new Language(name, langYaml).load());
+
+        languageCache.put(mainPlugin, pluginLanguage);
     }
 
     public static void registerLanguage(Plugin mainPlugin, PluginLanguage language) {

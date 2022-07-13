@@ -93,6 +93,9 @@ public class GuiEventProxy implements Listener {
         for(GuiHandler handler : handlers) {
             if(handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
                 event.setCancelled(handler.isCanceled());
+                if(handler.isCanceled() && handler.getCancelDragMessage() != null && event.getWhoClicked() instanceof Player) {
+                    ((Player) event.getWhoClicked()).sendMessage(handler.getCancelDragMessage());
+                }
             }
         }
     }

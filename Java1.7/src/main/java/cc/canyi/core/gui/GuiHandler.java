@@ -22,6 +22,9 @@ public class GuiHandler {
     @Setter
     private boolean notCheckPlayerInvSlot;
 
+    @Setter
+    private String cancelDragMessage;
+
     private final HashSet<Integer> reBackSlots;
 
     private final HashMap<GuiEventType, HashSet<RegisteredActiveFunction>> functions;

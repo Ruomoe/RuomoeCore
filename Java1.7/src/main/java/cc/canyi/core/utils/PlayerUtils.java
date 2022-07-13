@@ -88,9 +88,18 @@ public class PlayerUtils {
             throw new RuomoeCoreInvokeException("You usage a small than 4 list to replace player equipment");
         }
         PlayerInventory playerInventory = player.getInventory();
-        playerInventory.setHelmet(equipments.get(0));
-        playerInventory.setChestplate(equipments.get(1));
-        playerInventory.setLeggings(equipments.get(2));
-        playerInventory.setBoots(equipments.get(3));
+        if(equipments.get(0) != null)
+            playerInventory.setHelmet(equipments.get(0));
+        if(equipments.get(1) != null)
+            playerInventory.setChestplate(equipments.get(1));
+        if(equipments.get(2) != null)
+            playerInventory.setLeggings(equipments.get(2));
+        if(equipments.get(3) != null)
+            playerInventory.setBoots(equipments.get(3));
+    }
+
+    public static Player getPlayerIfOnline(String playerName) {
+        if(Bukkit.getPlayer(playerName) != null && Bukkit.getPlayer(playerName).isOnline()) return Bukkit.getPlayer(playerName);
+        return null;
     }
 }

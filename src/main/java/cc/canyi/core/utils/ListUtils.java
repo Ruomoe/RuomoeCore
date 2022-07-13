@@ -1,6 +1,7 @@
 package cc.canyi.core.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListUtils {
@@ -57,6 +58,22 @@ public class ListUtils {
         return list;
     }
 
+    public static List<String> str2List(String str) {
+        if(str.equals("{}")) return new ArrayList<>();
+        List<String> list = null;
+        if(str.contains("{") && str.contains("}") && str.contains(",")) {
+            String[] part = str.trim().substring(1).substring(0, str.length() - 2).split(",");
+            list = new ArrayList<>(Arrays.asList(part));
+        }
+        return list;
+    }
 
+    public static String list2Str(List<String> list) {
+        if(list.isEmpty()) return "{}";
+        StringBuilder builder = new StringBuilder("{");
+        for(String name : list) builder.append(name).append(",");
+        builder.append("}");
+        return builder.toString();
+    }
 
 }

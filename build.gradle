@@ -1,6 +1,9 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "5.0.0"
 }
+
+apply plugin: "com.github.johnrengelman.shadow"
 
 group 'cc.canyi.core'
 version '1.0-SNAPSHOT'
@@ -17,8 +20,19 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.20')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation 'cn.hutool:hutool-all:5.8.4'
     implementation files('libs/ProtocolLib_3.6.5.jar')
     implementation files('libs/[修复版]spigot-1.12.2.jar')
+}
+
+shadowJar {
+    dependencies {
+        exclude('lombok-1.18.20.jar')
+        exclude('snakeyaml')
+        exclude('[修复版]spigot-1.12.2.jar')
+        exclude('ProtocolLib_3.6.5.jar')
+    }
 }
 
 test {

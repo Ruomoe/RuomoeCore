@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+apply plugin: "com.github.johnrengelman.shadow"
+
 group 'cc.canyi.core'
 version '1.0-SNAPSHOT'
 
@@ -22,9 +24,21 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.20')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation 'cn.hutool:hutool-all:4.6.10'
     implementation files('libs/bukkit-1.6.4-R2.0.jar')
     implementation files('libs/craftbukkit-1.6.4-R2.0.jar')
     implementation files('libs/ProtocolLib_3.4.0.jar')
+}
+
+shadowJar {
+    dependencies {
+        exclude('lombok-1.18.20.jar')
+        exclude('snakeyaml')
+        exclude('bukkit-1.6.4-R2.0.jar')
+        exclude('craftbukkit-1.6.4-R2.0.jar')
+        exclude('ProtocolLib_3.4.0.jar')
+    }
 }
 
 test {

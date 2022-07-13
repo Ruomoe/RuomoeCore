@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class Page {
     private final int index;
     private final HashMap<Integer, Object> dataMap;
+    private int size = 0;
 
     public Object getObjectBySlot(int slot) {
         return dataMap.get(slot);
@@ -15,6 +16,7 @@ public class Page {
 
     public void putObject(int slot, Object o) {
         dataMap.put(slot, o);
+        size ++;
     }
 
     public void print() {
