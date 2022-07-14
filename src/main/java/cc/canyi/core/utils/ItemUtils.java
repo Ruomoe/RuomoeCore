@@ -251,15 +251,15 @@ public class ItemUtils {
                         break;
                     }else if(sum + stack.getAmount() == amount) {
                         //足够 设置为null
+                        sum += stack.getAmount();
                         stack.setType(Material.AIR);
                         playerInventory.setItem(i, stack);
-                        sum += stack.getAmount();
                         break;
                     }else {
                         //不够
+                        sum += stack.getAmount();
                         stack.setType(Material.AIR);
                         playerInventory.setItem(i, stack);
-                        sum += stack.getAmount();
                     }
                 }
             }

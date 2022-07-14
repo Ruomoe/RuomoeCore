@@ -1,6 +1,9 @@
 package cc.canyi.core.nms.v1_12_R1;
 
+import cc.canyi.core.RuomoeCorePlugin;
+import cc.canyi.core.nms.NMS;
 import cc.canyi.core.nms.model.ShowItem;
+import cc.canyi.core.tellraw.Tellraw;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_12_R1.ChatComponentText;
@@ -35,16 +38,32 @@ public class NMS1_12_R1 {
 
     public static void sendShowItemMessage(Player player, String message, String replaced, ItemStack stack) {
         String[] part = message.split(replaced);
-        TextComponent start = new TextComponent(part[0]);
-        TextComponent end = new TextComponent(part[1]);
-        TextComponent item = new TextComponent(replaced);
-        item.setHoverEvent(new ShowItem(stack).hoverEvent());
+        Tellraw tellraw = Tellraw.create(part[0]);
+        tellraw.then(replaced).item(stack);
+        if(part.length > 1)
+            tellraw.then(part[1]);
+        if(RuomoeCorePlugin.isDebug())
+            RuomoeCorePlugin.getInfoLogger().info("Debug -> " + tellraw.toJsonString());
+        RuomoeCorePlugin.getInfoLogger().info("Debug -> " + tellraw.toOldMessageFormat());
+        NMS.sendTellRaw(player, tellraw.toJsonString());
+        //TextComponent start = new TextComponent(part[0]);
+        //TextComponent end = new TextComponent(part[1]);
+//        TextComponent item = new TextComponent(replaced);
+//        item.setHoverEvent(new ShowItem(stack).hoverEvent());
+//        sendChatMessage(player, start, item, end);
 
-        sendChatMessage(player, start, item, end);
     }
 
     public static void sendShowItemMessage(List<Player> players, String message, String replaced, ItemStack stack) {
-        players.forEach(player -> sendShowItemMessage(player, message, replaced, stack));
+        String[] part = message.split(replaced);
+        Tellraw tellraw = Tellraw.create(part[0]);
+        tellraw.then(replaced).item(stack);
+        if(part.length > 1)
+            tellraw.then(part[1]);
+        if(RuomoeCorePlugin.isDebug())
+            RuomoeCorePlugin.getInfoLogger().info("Debug -> " + tellraw.toJsonString());
+            RuomoeCorePlugin.getInfoLogger().info("Debug -> " + tellraw.toOldMessageFormat());
+        players.forEach(player -> NMS.sendTellRaw(player, tellraw.toJsonString()));
     }
 
 }

@@ -22,4 +22,14 @@ public class NMS {
         }
     }
 
+    public static void sendTellRaw(String json) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + json);
+        }
+    }
+
+    public static void sendTellRaw(Player player, String json) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + json);
+    }
+
 }
