@@ -1,6 +1,7 @@
 package cc.canyi.core.gui;
 
 import cc.canyi.core.RuomoeCorePlugin;
+import cc.canyi.core.task.TaskHandler;
 import cc.canyi.core.utils.ItemUtils;
 import cc.canyi.core.utils.PlayerUtils;
 import lombok.Getter;
@@ -82,6 +83,8 @@ public class GuiEventProxy implements Listener {
                             inventory.setItem(slot, null);
                         }
                     });
+                    //取消刷新事件
+                    handler.getUpdateTasks().forEach(TaskHandler::cancel);
 //                    handler.destroy();
                     handlerIterator.remove();
                 }

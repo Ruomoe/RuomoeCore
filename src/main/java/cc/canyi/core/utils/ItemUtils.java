@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -308,5 +309,14 @@ public class ItemUtils {
     public static String protocolLibItem2Data(ItemStack stack) {
         StreamSerializer ss = new StreamSerializer();
         return ss.serializeItemStack(stack);
+    }
+
+    public static String itemDisplay(ItemStack stack) {
+        if(isItem(stack)) {
+            ItemMeta meta = stack.getItemMeta();
+            if(meta.hasDisplayName()) return meta.getDisplayName();
+            else return stack.getType().name();
+        }
+        return "AIR";
     }
 }

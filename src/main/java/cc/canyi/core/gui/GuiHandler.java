@@ -2,6 +2,7 @@ package cc.canyi.core.gui;
 
 import cc.canyi.core.RuomoeCorePlugin;
 import cc.canyi.core.gui.model.RegisteredActiveFunction;
+import cc.canyi.core.task.TaskHandler;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -29,15 +30,16 @@ public class GuiHandler {
 
     private final HashSet<Integer> reBackSlots;
 
+    private final HashSet<TaskHandler> updateTasks;
+
     public GuiHandler(Inventory inventory) {
         this.handledInv = inventory;
         functions = new HashMap<>();
         reBackSlots = new HashSet<>();
+        updateTasks = new HashSet<>();
     }
 
-    public void bind() {
-        GuiEventProxy.registerHandler(this);
-    }
+    public void bind() {GuiEventProxy.registerHandler(this);}
 
     public void destroy() {
         GuiEventProxy.unregisterHandler(this);
