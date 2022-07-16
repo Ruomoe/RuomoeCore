@@ -71,15 +71,28 @@ public class GuiEventProxy implements Listener {
     }
 
     @EventHandler
+    public void openGui(InventoryOpenEvent event) {
+        if(event.getPlayer() instanceof Player) {
+            Player player = (Player) event.getPlayer();
+            if(destroyPlayers.contains(player)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @Getter
+    private static final HashSet<Player> destroyPlayers = new LinkedHashSet<>();
+
+    @EventHandler
     public void closeInv(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         if(event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
-
             Iterator<GuiHandler> handlerIterator = handlers.iterator();
             while(handlerIterator.hasNext()) {
                 GuiHandler handler = handlerIterator.next();
                 if (handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
+                    destroyPlayers.add(player);
                     handler.getReBackSlots().forEach(slot -> {
                         ItemStack stack = inventory.getItem(slot);
                         if(ItemUtils.isItem(stack)) {
@@ -95,8 +108,13 @@ public class GuiEventProxy implements Listener {
                     handler.getUpdateTasks().forEach(TaskHandler::cancel);
 //                    handler.destroy();
                     handlerIterator.remove();
+                    destroyPlayers.remove(player);
+
+                    //优化效率
+                    break;
                 }
             }
+
         }
     }
 
