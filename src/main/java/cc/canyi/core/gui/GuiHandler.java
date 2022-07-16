@@ -32,11 +32,14 @@ public class GuiHandler {
 
     private final HashSet<TaskHandler> updateTasks;
 
+    private final HashSet<Integer> allowDragSlots;
+
     public GuiHandler(Inventory inventory) {
         this.handledInv = inventory;
         functions = new HashMap<>();
         reBackSlots = new HashSet<>();
         updateTasks = new HashSet<>();
+        allowDragSlots = new HashSet<>();
     }
 
     public void bind() {GuiEventProxy.registerHandler(this);}
@@ -57,6 +60,10 @@ public class GuiHandler {
 
     public void registerReBackItemSlot(int slot) {
         reBackSlots.add(slot);
+    }
+
+    public void registerAllowDragSlot(int slot) {
+        allowDragSlots.add(slot);
     }
 
     public boolean runFunction(GuiEventType type, Inventory inv, Player player, ItemStack cursorItem, ItemStack currentItem, int slot) {

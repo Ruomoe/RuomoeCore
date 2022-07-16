@@ -8,10 +8,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,12 +45,19 @@ public class GuiEventProxy implements Listener {
                 return;
             }
 
+
             for(GuiHandler handler : handlers) {
 
                 //Not Check Player Inv
                 if(handler.isNotCheckPlayerInvSlot() && event.getRawSlot() >= inventory.getSize()) {
                     return;
                 }
+                //数字键
+                if(event.getClick().equals(ClickType.NUMBER_KEY)){
+                    event.setCancelled(handler.isCanceled());
+                    return;
+                }
+
                 boolean cancel = true;
                 try{
                     cancel = handler.event(inventory, player, event.getSlot(), event.getClick(), event.getCursor().clone(), event.getCurrentItem().clone());
@@ -83,6 +87,10 @@ public class GuiEventProxy implements Listener {
                             inventory.setItem(slot, null);
                         }
                     });
+                    if(ItemUtils.isItem(player.getItemOnCursor())) {
+                        PlayerUtils.giveItem(player, player.getItemOnCursor());
+                        player.setItemOnCursor(null);
+                    }
                     //取消刷新事件
                     handler.getUpdateTasks().forEach(TaskHandler::cancel);
 //                    handler.destroy();
@@ -97,9 +105,20 @@ public class GuiEventProxy implements Listener {
         Inventory inventory = event.getInventory();
         for(GuiHandler handler : handlers) {
             if(handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
-                event.setCancelled(handler.isCanceled());
-                if(handler.isCanceled() && handler.getCancelDragMessage() != null && event.getWhoClicked() instanceof Player) {
-                    ((Player) event.getWhoClicked()).sendMessage(handler.getCancelDragMessage());
+                if(handler.getAllowDragSlots().isEmpty()) {
+                    event.setCancelled(handler.isCanceled());
+                    if (handler.isCanceled() && handler.getCancelDragMessage() != null && event.getWhoClicked() instanceof Player) {
+                        ((Player) event.getWhoClicked()).sendMessage(handler.getCancelDragMessage());
+                    }
+                }else {
+                    //允许拖拽
+                    if (event.getInventorySlots().size() > 1) {
+                        event.setCancelled(event.getInventorySlots().containsAll(handler.getAllowDragSlots()) && handler.getAllowDragSlots().contains(event.getInventorySlots()));
+                    } else if(event.getInventorySlots().size() == 1) {
+                        event.setCancelled(handler.getAllowDragSlots().containsAll(event.getInventorySlots()));
+                    }else {
+                        event.setCancelled(handler.isCanceled());
+                    }
                 }
             }
         }
