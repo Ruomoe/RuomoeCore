@@ -13,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GuiEventProxy implements Listener {
     @Getter
@@ -46,22 +47,27 @@ public class GuiEventProxy implements Listener {
                 return;
             }
 
-            long time = clickTimeMap.getOrDefault(player, System.currentTimeMillis());
-            if(time - System.currentTimeMillis() < 500) {
-                //节流
-                event.setCancelled(true);
-                return;
-            }
-
-            clickTimeMap.put(player, System.currentTimeMillis());
-
             //防止多重点击 保证逻辑执行完毕
             if(foreachHandlerPlayers.contains(player)) {
                 event.setCancelled(true);
                 return;
             }
+
+            List<GuiHandler> filterGuiHandlers = filterGuiHandlerByTitle(inventory);
+
+            if(!filterGuiHandlers.isEmpty()) {
+                long time = clickTimeMap.getOrDefault(player, System.currentTimeMillis());
+                if(time - System.currentTimeMillis() < 500) {
+                    //节流
+                    event.setCancelled(true);
+                    return;
+                }
+                clickTimeMap.put(player, System.currentTimeMillis());
+            }
+
             foreachHandlerPlayers.add(player);
-            for(GuiHandler handler : handlers) {
+
+            for(GuiHandler handler : filterGuiHandlers) {
 
                 //Not Check Player Inv
                 if(handler.isNotCheckPlayerInvSlot() && event.getRawSlot() >= inventory.getSize()) {
@@ -84,6 +90,10 @@ public class GuiEventProxy implements Listener {
             }
             foreachHandlerPlayers.remove(player);
         }
+    }
+
+    public List<GuiHandler> filterGuiHandlerByTitle(Inventory clickInv) {
+        return handlers.stream().filter(handler -> handler.getHandledInv().getTitle().equals(clickInv.getTitle())).collect(Collectors.toList());
     }
 
     @EventHandler

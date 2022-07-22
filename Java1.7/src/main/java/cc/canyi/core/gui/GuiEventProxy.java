@@ -46,23 +46,26 @@ public class GuiEventProxy implements Listener {
                 return;
             }
 
-            long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis();
-            if(time - System.currentTimeMillis() < 500) {
-                //节流
-                event.setCancelled(true);
-                return;
-            }
-
-            clickTimeMap.put(player, System.currentTimeMillis());
-
             //防止多重点击 保证逻辑执行完毕
             if(foreachHandlerPlayers.contains(player)) {
                 event.setCancelled(true);
                 return;
             }
+            List<GuiHandler> filterGuiHandlers = filterGuiHandlerByTitle(inventory);
+
+            if(!filterGuiHandlers.isEmpty()) {
+                long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis();
+                if(time - System.currentTimeMillis() < 500) {
+                    //节流
+                    event.setCancelled(true);
+                    return;
+                }
+
+                clickTimeMap.put(player, System.currentTimeMillis());
+            }
 
             foreachHandlerPlayers.add(player);
-            for (GuiHandler handler : handlers) {
+            for (GuiHandler handler : filterGuiHandlers) {
 
                 //Not Check Player Inv
                 if (handler.isNotCheckPlayerInvSlot() && event.getRawSlot() >= inventory.getSize()) {
@@ -83,6 +86,14 @@ public class GuiEventProxy implements Listener {
             }
             foreachHandlerPlayers.remove(player);
         }
+    }
+
+    public List<GuiHandler> filterGuiHandlerByTitle(Inventory clickInv) {
+        List<GuiHandler> filters = new ArrayList<>();
+        for(GuiHandler handler : handlers) {
+            if(handler.getHandledInv().getTitle().equals(clickInv.getTitle())) filters.add(handler);
+        }
+        return filters;
     }
 
     @EventHandler
