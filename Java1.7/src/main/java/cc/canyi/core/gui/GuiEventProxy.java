@@ -54,7 +54,7 @@ public class GuiEventProxy implements Listener {
             List<GuiHandler> filterGuiHandlers = filterGuiHandlerByTitle(inventory);
             if (filterGuiHandlers.isEmpty()) return;
 
-            long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis();
+            long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis() - 1000;
             if (time - System.currentTimeMillis() < 500) {
                 //节流
                 event.setCancelled(true);
@@ -65,6 +65,7 @@ public class GuiEventProxy implements Listener {
 
 
             foreachHandlerPlayers.add(player);
+
             for (GuiHandler handler : filterGuiHandlers) {
 
                 //Not Check Player Inv
@@ -84,6 +85,7 @@ public class GuiEventProxy implements Listener {
                 }
                 if (cancel) event.setCancelled(true);
             }
+
             foreachHandlerPlayers.remove(player);
         }
     }
