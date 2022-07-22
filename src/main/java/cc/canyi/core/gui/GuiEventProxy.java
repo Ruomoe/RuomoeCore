@@ -12,9 +12,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 public class GuiEventProxy implements Listener {
     @Getter
@@ -27,6 +25,9 @@ public class GuiEventProxy implements Listener {
     public static void unregisterHandler(GuiHandler handler) {
         handlers.remove(handler);
     }
+
+    private final HashMap<Player, Long> clickTimeMap = new LinkedHashMap<>();
+    private final HashSet<Player> foreachHandlerPlayers = new LinkedHashSet<>();
 
     @EventHandler(ignoreCancelled = true)
     public void clickInv(InventoryClickEvent event) {
@@ -45,7 +46,21 @@ public class GuiEventProxy implements Listener {
                 return;
             }
 
+            long time = clickTimeMap.getOrDefault(player, System.currentTimeMillis());
+            if(time - System.currentTimeMillis() < 500) {
+                //节流
+                event.setCancelled(true);
+                return;
+            }
 
+            clickTimeMap.put(player, System.currentTimeMillis());
+
+            //防止多重点击 保证逻辑执行完毕
+            if(foreachHandlerPlayers.contains(player)) {
+                event.setCancelled(true);
+                return;
+            }
+            foreachHandlerPlayers.add(player);
             for(GuiHandler handler : handlers) {
 
                 //Not Check Player Inv
@@ -67,6 +82,7 @@ public class GuiEventProxy implements Listener {
 
                 if(cancel) event.setCancelled(true);
             }
+            foreachHandlerPlayers.remove(player);
         }
     }
 
