@@ -48,16 +48,21 @@ public class GuiEventProxy implements Listener {
 
             //防止多重点击 保证逻辑执行完毕
             if (foreachHandlerPlayers.contains(player)) {
+                if(RuomoeCorePlugin.isDebug()) System.out.println("Foreach-ing return.");
                 event.setCancelled(true);
                 return;
             }
             List<GuiHandler> filterGuiHandlers = filterGuiHandlerByTitle(inventory);
-            if (filterGuiHandlers.isEmpty()) return;
+            if (filterGuiHandlers.isEmpty()){
+                if(RuomoeCorePlugin.isDebug()) System.out.println("Empty GuiHandler return.");
+                return;
+            }
 
             long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis() - 1000;
             if (System.currentTimeMillis() - time < 500) {
                 //节流
                 event.setCancelled(true);
+                if(RuomoeCorePlugin.isDebug()) System.out.println("ClickTime < 500ms return " + System.currentTimeMillis() + " | " + time);
                 return;
             }
 
@@ -70,11 +75,13 @@ public class GuiEventProxy implements Listener {
 
                 //Not Check Player Inv
                 if (handler.isNotCheckPlayerInvSlot() && event.getRawSlot() >= inventory.getSize()) {
+                    foreachHandlerPlayers.remove(player);
                     return;
                 }
                 //数字键
                 if (event.getClick().equals(ClickType.NUMBER_KEY)) {
                     event.setCancelled(handler.isCanceled());
+                    foreachHandlerPlayers.remove(player);
                     return;
                 }
                 boolean cancel = true;
@@ -82,6 +89,7 @@ public class GuiEventProxy implements Listener {
                     cancel = handler.event(inventory, player, event.getSlot(), event.getClick(), event.getCursor().clone(), event.getCurrentItem().clone());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    foreachHandlerPlayers.remove(player);
                 }
                 if (cancel) event.setCancelled(true);
             }
