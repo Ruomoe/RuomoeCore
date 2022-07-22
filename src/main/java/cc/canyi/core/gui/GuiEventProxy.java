@@ -32,62 +32,64 @@ public class GuiEventProxy implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void clickInv(InventoryClickEvent event) {
-        if(event.getWhoClicked() instanceof Player) {
+        if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
             Inventory inventory = event.getInventory();
 
-            if(RuomoeCorePlugin.isDebug()) {
+            if (RuomoeCorePlugin.isDebug()) {
                 System.out.println("SlotType: " + event.getSlotType());
                 System.out.println("Slot: " + event.getSlot());
                 System.out.println("RowSlot: " + event.getRawSlot());
                 System.out.println("Click: " + event.getClick());
             }
             //Not Check Outside
-            if((event.getSlot() == -999 && event.getRawSlot() == 999) || event.getSlotType().equals(InventoryType.SlotType.OUTSIDE)) {
+            if ((event.getSlot() == -999 && event.getRawSlot() == 999) || event.getSlotType().equals(InventoryType.SlotType.OUTSIDE)) {
                 return;
             }
 
             //防止多重点击 保证逻辑执行完毕
-            if(foreachHandlerPlayers.contains(player)) {
+            if (foreachHandlerPlayers.contains(player)) {
                 event.setCancelled(true);
                 return;
             }
 
             List<GuiHandler> filterGuiHandlers = filterGuiHandlerByTitle(inventory);
+            if (filterGuiHandlers.isEmpty()) return;
 
-            if(!filterGuiHandlers.isEmpty()) {
-                long time = clickTimeMap.getOrDefault(player, System.currentTimeMillis());
-                if(time - System.currentTimeMillis() < 500) {
-                    //节流
-                    event.setCancelled(true);
-                    return;
-                }
-                clickTimeMap.put(player, System.currentTimeMillis());
+
+            long time = clickTimeMap.getOrDefault(player, System.currentTimeMillis());
+            if (time - System.currentTimeMillis() < 500) {
+                //节流
+                event.setCancelled(true);
+                return;
             }
+            clickTimeMap.put(player, System.currentTimeMillis());
+
 
             foreachHandlerPlayers.add(player);
 
-            for(GuiHandler handler : filterGuiHandlers) {
+            for (GuiHandler handler : filterGuiHandlers) {
 
                 //Not Check Player Inv
-                if(handler.isNotCheckPlayerInvSlot() && event.getRawSlot() >= inventory.getSize()) {
+                if (handler.isNotCheckPlayerInvSlot() && event.getRawSlot() >= inventory.getSize()) {
                     return;
                 }
                 //数字键
-                if(event.getClick().equals(ClickType.NUMBER_KEY)){
+                if (event.getClick().equals(ClickType.NUMBER_KEY)) {
                     event.setCancelled(handler.isCanceled());
                     return;
                 }
 
                 boolean cancel = true;
-                try{
+                try {
                     cancel = handler.event(inventory, player, event.getSlot(), event.getClick(), event.getCursor().clone(), event.getCurrentItem().clone());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if(cancel) event.setCancelled(true);
+                if (cancel) event.setCancelled(true);
             }
+
             foreachHandlerPlayers.remove(player);
         }
     }
@@ -98,9 +100,9 @@ public class GuiEventProxy implements Listener {
 
     @EventHandler
     public void openGui(InventoryOpenEvent event) {
-        if(event.getPlayer() instanceof Player) {
+        if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
-            if(destroyPlayers.contains(player)) {
+            if (destroyPlayers.contains(player)) {
                 event.setCancelled(true);
             }
         }
@@ -112,21 +114,21 @@ public class GuiEventProxy implements Listener {
     @EventHandler
     public void closeInv(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
-        if(event.getPlayer() instanceof Player) {
+        if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
             Iterator<GuiHandler> handlerIterator = handlers.iterator();
-            while(handlerIterator.hasNext()) {
+            while (handlerIterator.hasNext()) {
                 GuiHandler handler = handlerIterator.next();
                 if (handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
                     destroyPlayers.add(player);
                     handler.getReBackSlots().forEach(slot -> {
                         ItemStack stack = inventory.getItem(slot);
-                        if(ItemUtils.isItem(stack)) {
+                        if (ItemUtils.isItem(stack)) {
                             PlayerUtils.giveItem(player, stack);
                             inventory.setItem(slot, null);
                         }
                     });
-                    if(ItemUtils.isItem(player.getItemOnCursor())) {
+                    if (ItemUtils.isItem(player.getItemOnCursor())) {
                         PlayerUtils.giveItem(player, player.getItemOnCursor());
                         player.setItemOnCursor(null);
                     }
@@ -147,20 +149,20 @@ public class GuiEventProxy implements Listener {
     @EventHandler
     public void drag(InventoryDragEvent event) {
         Inventory inventory = event.getInventory();
-        for(GuiHandler handler : handlers) {
-            if(handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
-                if(handler.getAllowDragSlots().isEmpty()) {
+        for (GuiHandler handler : handlers) {
+            if (handler.getHandledInv().getTitle().equals(inventory.getTitle()) || handler.getHandledInv().equals(inventory)) {
+                if (handler.getAllowDragSlots().isEmpty()) {
                     event.setCancelled(handler.isCanceled());
                     if (handler.isCanceled() && handler.getCancelDragMessage() != null && event.getWhoClicked() instanceof Player) {
                         ((Player) event.getWhoClicked()).sendMessage(handler.getCancelDragMessage());
                     }
-                }else {
+                } else {
                     //允许拖拽
                     if (event.getInventorySlots().size() > 1) {
                         event.setCancelled(event.getInventorySlots().containsAll(handler.getAllowDragSlots()) && handler.getAllowDragSlots().contains(event.getInventorySlots()));
-                    } else if(event.getInventorySlots().size() == 1) {
+                    } else if (event.getInventorySlots().size() == 1) {
                         event.setCancelled(handler.getAllowDragSlots().containsAll(event.getInventorySlots()));
-                    }else {
+                    } else {
                         event.setCancelled(handler.isCanceled());
                     }
                 }

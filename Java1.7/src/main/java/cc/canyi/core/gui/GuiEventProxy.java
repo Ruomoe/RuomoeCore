@@ -47,22 +47,22 @@ public class GuiEventProxy implements Listener {
             }
 
             //防止多重点击 保证逻辑执行完毕
-            if(foreachHandlerPlayers.contains(player)) {
+            if (foreachHandlerPlayers.contains(player)) {
                 event.setCancelled(true);
                 return;
             }
             List<GuiHandler> filterGuiHandlers = filterGuiHandlerByTitle(inventory);
+            if (filterGuiHandlers.isEmpty()) return;
 
-            if(!filterGuiHandlers.isEmpty()) {
-                long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis();
-                if(time - System.currentTimeMillis() < 500) {
-                    //节流
-                    event.setCancelled(true);
-                    return;
-                }
-
-                clickTimeMap.put(player, System.currentTimeMillis());
+            long time = clickTimeMap.containsKey(player) ? clickTimeMap.get(player) : System.currentTimeMillis();
+            if (time - System.currentTimeMillis() < 500) {
+                //节流
+                event.setCancelled(true);
+                return;
             }
+
+            clickTimeMap.put(player, System.currentTimeMillis());
+
 
             foreachHandlerPlayers.add(player);
             for (GuiHandler handler : filterGuiHandlers) {
@@ -72,7 +72,7 @@ public class GuiEventProxy implements Listener {
                     return;
                 }
                 //数字键
-                if(event.getClick().equals(ClickType.NUMBER_KEY)){
+                if (event.getClick().equals(ClickType.NUMBER_KEY)) {
                     event.setCancelled(handler.isCanceled());
                     return;
                 }
@@ -90,17 +90,17 @@ public class GuiEventProxy implements Listener {
 
     public List<GuiHandler> filterGuiHandlerByTitle(Inventory clickInv) {
         List<GuiHandler> filters = new ArrayList<>();
-        for(GuiHandler handler : handlers) {
-            if(handler.getHandledInv().getTitle().equals(clickInv.getTitle())) filters.add(handler);
+        for (GuiHandler handler : handlers) {
+            if (handler.getHandledInv().getTitle().equals(clickInv.getTitle())) filters.add(handler);
         }
         return filters;
     }
 
     @EventHandler
     public void openGui(InventoryOpenEvent event) {
-        if(event.getPlayer() instanceof Player) {
+        if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
-            if(destroyPlayers.contains(player)) {
+            if (destroyPlayers.contains(player)) {
                 event.setCancelled(true);
             }
         }
@@ -128,7 +128,7 @@ public class GuiEventProxy implements Listener {
                             inventory.setItem(slot, null);
                         }
                     }
-                    if(ItemUtils.isItem(player.getItemOnCursor())) {
+                    if (ItemUtils.isItem(player.getItemOnCursor())) {
                         PlayerUtils.giveItem(player, player.getItemOnCursor());
                         player.setItemOnCursor(null);
                     }
@@ -159,9 +159,9 @@ public class GuiEventProxy implements Listener {
                     //允许拖拽
                     if (event.getInventorySlots().size() > 1) {
                         event.setCancelled(event.getInventorySlots().containsAll(handler.getAllowDragSlots()) && handler.getAllowDragSlots().contains(event.getInventorySlots()));
-                    } else if(event.getInventorySlots().size() == 1) {
+                    } else if (event.getInventorySlots().size() == 1) {
                         event.setCancelled(handler.getAllowDragSlots().containsAll(event.getInventorySlots()));
-                    }else {
+                    } else {
                         event.setCancelled(handler.isCanceled());
                     }
                 }
