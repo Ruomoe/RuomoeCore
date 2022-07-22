@@ -58,7 +58,7 @@ public class GuiEventProxy implements Listener {
 
 
             long time = clickTimeMap.getOrDefault(player, System.currentTimeMillis() - 1000);
-            if (time - System.currentTimeMillis() < 500) {
+            if (System.currentTimeMillis() - time < 500) {
                 //节流
                 event.setCancelled(true);
                 return;
