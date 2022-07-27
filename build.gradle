@@ -24,6 +24,8 @@ dependencies {
     implementation 'cn.hutool:hutool-all:5.8.4'
     implementation files('libs/ProtocolLib_3.6.5.jar')
     implementation files('libs/[修复版]spigot-1.12.2.jar')
+    implementation files('libs/Vault1.6.11.jar')
+    implementation files('libs/PlaceholderAPI-2.9.2.jar')
 }
 
 shadowJar {
@@ -32,6 +34,8 @@ shadowJar {
         exclude('snakeyaml')
         exclude('[修复版]spigot-1.12.2.jar')
         exclude('ProtocolLib_3.6.5.jar')
+        exclude('Vault1.6.11.jar')
+        exclude('PlaceholderAPI-2.9.2.jar')
     }
 }
 

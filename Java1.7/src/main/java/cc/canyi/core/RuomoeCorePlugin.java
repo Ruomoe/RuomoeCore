@@ -2,10 +2,12 @@ package cc.canyi.core;
 
 import cc.canyi.core.command.CommandManager;
 import cc.canyi.core.gui.GuiEventProxy;
+import cc.canyi.core.model.IEconomy;
+import cc.canyi.core.model.ProtocolManager;
+import cc.canyi.core.model.VaultEconomy;
 import cc.canyi.core.plugin.BukkitPlugin;
 import cc.canyi.core.utils.ListenerUtils;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
+import cc.canyi.core.utils.PAPIUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -25,6 +27,9 @@ public class RuomoeCorePlugin extends BukkitPlugin {
     @Getter
     private static ProtocolManager protocolManager;
 
+    @Getter
+    private static IEconomy defaultEconomy;
+
     @Override
     public void onEnable() {
         infoLogger = this.getLogger();
@@ -37,8 +42,21 @@ public class RuomoeCorePlugin extends BukkitPlugin {
 
         ListenerUtils.registerListener(this, new GuiEventProxy());
         if(Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
-            protocolManager = ProtocolLibrary.getProtocolManager();
+            protocolManager = new cc.canyi.core.model.ProtocolManager();
+            protocolManager.init();
             this.getLogger().info("ProtocolLib is ready.");
+        }
+
+        if(Bukkit.getPluginManager().getPlugin("Vault") != null) {
+            VaultEconomy vaultEconomy = new VaultEconomy();
+            vaultEconomy.init();
+            defaultEconomy = vaultEconomy;
+            this.getLogger().info("Vault is ready.");
+        }
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            PAPIUtils.setPapiLoaded(true);
+            this.getLogger().info("PlaceholderAPI is ready.");
         }
         this.getLogger().info("RuomoeCore enable.");
     }

@@ -1,4 +1,5 @@
 name: RuomoeCore
 main: cc.canyi.core.RuomoeCorePlugin
 depend: [ProtocolLib]
+softdepend: [Vault]
 version: 1.0.0

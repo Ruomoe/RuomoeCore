@@ -29,6 +29,8 @@ dependencies {
     implementation files('libs/bukkit-1.6.4-R2.0.jar')
     implementation files('libs/craftbukkit-1.6.4-R2.0.jar')
     implementation files('libs/ProtocolLib_3.4.0.jar')
+    implementation files('libs/Vault1.6.4.jar')
+    implementation files('libs/[前置]PlaceholderAPI.jar')
 }
 
 shadowJar {
@@ -38,6 +40,7 @@ shadowJar {
         exclude('bukkit-1.6.4-R2.0.jar')
         exclude('craftbukkit-1.6.4-R2.0.jar')
         exclude('ProtocolLib_3.4.0.jar')
+        exclude('Vault1.6.4.jar')
     }
 }
 
