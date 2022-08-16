@@ -4,6 +4,7 @@ import cc.canyi.core.RuomoeCorePlugin;
 import cc.canyi.core.nms.NMS;
 import cc.canyi.core.nms.model.ShowItem;
 import cc.canyi.core.tellraw.Tellraw;
+import cc.canyi.core.utils.ItemUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_12_R1.ChatComponentText;
@@ -39,7 +40,7 @@ public class NMS1_12_R1 {
     public static void sendShowItemMessage(Player player, String message, String replaced, ItemStack stack) {
         String[] part = message.split(replaced);
         Tellraw tellraw = Tellraw.create(part[0]);
-        tellraw.then(replaced).item(stack);
+        tellraw.then(ItemUtils.itemDisplay(stack)).item(stack);
         if(part.length > 1)
             tellraw.then(part[1]);
         if(RuomoeCorePlugin.isDebug())
@@ -57,7 +58,7 @@ public class NMS1_12_R1 {
     public static void sendShowItemMessage(List<Player> players, String message, String replaced, ItemStack stack) {
         String[] part = message.split(replaced);
         Tellraw tellraw = Tellraw.create(part[0]);
-        tellraw.then(replaced).item(stack);
+        tellraw.then(ItemUtils.itemDisplay(stack)).item(stack);
         if(part.length > 1)
             tellraw.then(part[1]);
         if(RuomoeCorePlugin.isDebug())
