@@ -22,7 +22,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     implementation 'cn.hutool:hutool-all:5.8.4'
-    implementation files('libs/ProtocolLib_3.6.5.jar')
+    implementation files('libs/ProtocolLib.jar')
     implementation files('libs/[修复版]spigot-1.12.2.jar')
     implementation files('libs/Vault1.6.11.jar')
     implementation files('libs/PlaceholderAPI-2.9.2.jar')
