@@ -11,6 +11,7 @@ public class ProtocolUtils {
             case TAB: return new TabPacketReplacer(bukkitPlugin, replaceMap, replacePAPI);
             case CHAT: return new ChatPacketReplacer(bukkitPlugin, replaceMap, replacePAPI);
             case ENTITY: return new EntityPacketReplacer(bukkitPlugin, replaceMap, replacePAPI);
+            case BOARD: return new BoardReplacer(bukkitPlugin, replaceMap, replacePAPI);
         }
         return null;
     }
