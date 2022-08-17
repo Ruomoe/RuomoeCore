@@ -12,6 +12,10 @@ public class ProtocolUtils {
             case CHAT: return new ChatPacketReplacer(bukkitPlugin, replaceMap, replacePAPI);
             case ENTITY: return new EntityPacketReplacer(bukkitPlugin, replaceMap, replacePAPI);
             case BOARD: return new BoardReplacer(bukkitPlugin, replaceMap, replacePAPI);
+            case BOSS_BAR: return new BossBarReplacer(bukkitPlugin, replaceMap, replacePAPI);
+            case TITLE: return new TitleReplacer(bukkitPlugin, replaceMap, replacePAPI);
+            case OPEN_WINDOW: return new OpenWindowReplacer(bukkitPlugin, replaceMap, replacePAPI);
+            case KICK: return new KickReplacer(bukkitPlugin, replaceMap, replacePAPI);
         }
         return null;
     }
